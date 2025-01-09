@@ -28,6 +28,7 @@ namespace TOM.Apps.Template
         // Start is called before the first frame update
         void Start()
         {
+        
             // templateUIController.ResetUI();
             // InvokeRepeating(nameof(sendTemplateRequestToServer), 2.0f, TEMPLATE_REQUEST_GAP_SECONDS);
         }
@@ -102,6 +103,7 @@ namespace TOM.Apps.Template
             // templateUIController.UpdateText(templateData.TextMessage);
             // templateUIController.SetImage(templateData.Image.ToByteArray());
             // templateUIController.PlayAudio(templateData.AudioPath);
+
         }
 
         private void sendTemplateRequestToServer()
