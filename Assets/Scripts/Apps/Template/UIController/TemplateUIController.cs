@@ -16,83 +16,50 @@ namespace TOM.Apps.Template
 
     public class TemplateUIController : MonoBehaviour
     {
-        [SerializeField] private GameObject TemplateUI;
-        [SerializeField] private TextMesh panelText;
-        [SerializeField] private GameObject imageDisplayRenderer;
-        [SerializeField] private AudioSource audioSource;
-        private string previousAudio;
+        [SerializeField] private GameObject waddles;
+        [SerializeField] private GameObject loading;
+        [SerializeField] private GameObject textbox;
+        
+        private enum UIState {
+            Idle,
+            Loading,
+            Result
+        }
+
+        private UIState currentState;
 
         // Start is called before the first frame update
         void Start()
         {
-            previousAudio = "";
+            setUIState(UiState.Idle);
         }
 
-        // Update is called once per frame
-        void Update()
-        {
+        private void SetUIState(UIState state) {
+            currentState = state;
+
+            waddles.SetActive(true);
+            loading.SetActive(state = UIState.Loading);
+            textbox.SetActive(state = UIState.Result);
         }
 
-        public void ResetUI()
-        {
-            Debug.Log("ResetUI");
-            UpdateText("");
-            imageDisplayRenderer.SetActive(false);
-            audioSource.Stop();
+        public void ShowIdle() {
+            SetUIState(UIState.Idle);
         }
 
-        public void UpdateText(string text)
-        {
-            panelText.text = text;
+        public void ShowLoading(string text) {
+            SetUIState(UIState.Loading);
         }
 
-        public void SetImage(byte[] image)
-        {
-            Debug.Log("SetImage");
-            Texture2D texture = new Texture2D(2, 2);
+        public void ShowResult(string text) {
+            SetUIState(UIState.Result);
+            UpdateText(text);
+        }
 
-            if (texture.LoadImage(image))
-            {
-                imageDisplayRenderer.SetActive(true);
-                RawImage img = imageDisplayRenderer.GetComponentInChildren<RawImage>();
-                img.texture = texture;
-            }
-            else
-            {
-                imageDisplayRenderer.SetActive(false);
-                Debug.LogError("Failed to load image");
+        private void UpdateTest(string text) {
+            TesxtMesh panelText = textbox.GetComponentInChildren<TextMesh.();
+            if (panelText!= null) {
+                panelText.text = text;
             }
         }
-
-        public void PlayAudio(string audioName)
-        {
-            Debug.Log("PlayAudio");
-            // Guard clause to prevent same audio from replaying prematurely
-            if (previousAudio == audioName && audioSource.isPlaying)
-            {
-                return;
-            }
-
-            audioSource.Stop();
-            AudioClip clip = LoadAudioClip(audioName);
-            audioSource.clip = clip;
-            audioSource.Play();
-        }
-
-        private AudioClip LoadAudioClip(string audioName)
-        {
-            // Instructions for new users: songs and soundtracks should all sit in the Assets/Resources/Audio folder by convention
-            string path = "Audio/" + audioName;
-            AudioClip audioClip = Resources.Load<AudioClip>(path);
-            if (audioClip == null)
-            {
-                Debug.LogError("Failed to load audio clip from path: " + path);
-                return null;
-            }
-
-            Debug.Log("Successfully loaded clip from path: " + path);
-            return audioClip;
-        }
-    }
 
 }

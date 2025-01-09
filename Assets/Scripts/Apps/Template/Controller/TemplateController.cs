@@ -17,19 +17,20 @@ using Microsoft.MixedReality.Toolkit;
 namespace TOM.Apps.Template
 {
 
-    public class TemplateController : HomeController
+    public class Controller : HomeController
     {
         public SocketCommunication socketCommunication;
 
-        public TemplateUIController templateUIController;
+        public Controller UIController;
 
-        private const float TEMPLATE_REQUEST_GAP_SECONDS = 5f;
+        private const float REQUEST_GAP_SECONDS = 5f;
+
+        private bool isWaitingForResponse = false;
 
         // Start is called before the first frame update
         void Start()
         {
-            templateUIController.ResetUI();
-            InvokeRepeating(nameof(sendTemplateRequestToServer), 2.0f, TEMPLATE_REQUEST_GAP_SECONDS);
+            UIController.ShowIdle();
         }
 
 
@@ -38,6 +39,16 @@ namespace TOM.Apps.Template
         void Update()
         {
             handleCommunication();
+
+            // if (button pressed) { StartLoading() };
+        }
+
+        private void StartLoading() {
+            if (!isWaitingForResponse) {
+                templateUIController.ShowLoading();
+                sendTemplateRequestToServer();
+                isWaitingForResponse = true;
+            }
         }
 
         private void handleCommunication()
@@ -67,7 +78,8 @@ namespace TOM.Apps.Template
                     try
                     {
                         TemplateData templateData = TemplateData.Parser.ParseFrom(data);
-                        UpdateTemplateUI(dataType, templateData);
+                        templatteUiController.ShowResult(templateData.TextMessage);
+                        isWaitingForResponse = false;
                         return true;
                     }
                     catch (Exception e)
@@ -91,18 +103,6 @@ namespace TOM.Apps.Template
             }
         }
 
-        private void UpdateTemplateUI(int dataType, TemplateData templateData)
-        {
-            Debug.Log("TemplateData:\n" +
-                      "dataType: " + dataType + "\n" +
-                      "text_message: " + templateData.TextMessage + "\n" +
-                      "image: " + templateData.Image.ToByteArray() + "\n" +
-                      "audio_path: " + templateData.AudioPath + "\n");
-
-            templateUIController.UpdateText(templateData.TextMessage);
-            templateUIController.SetImage(templateData.Image.ToByteArray());
-            templateUIController.PlayAudio(templateData.AudioPath);
-        }
 
         private void sendTemplateRequestToServer()
         {
