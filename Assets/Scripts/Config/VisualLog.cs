@@ -20,7 +20,7 @@ namespace TOM.Common.Config
         // Update is called once per frame
         void Update()
         {
-            if (valuesUpdated && DebugText != null)
+            if (valuesUpdated)
             {
                 DebugText.text = logMessage;
                 valuesUpdated = false;
