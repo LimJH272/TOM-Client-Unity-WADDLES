@@ -55,8 +55,19 @@ namespace TOM.Apps.Template
             yield return new WaitForSeconds(3f); // Wait for 2 seconds
 
             // Randomly select between safe and not safe
-            //bool isSafe = Random.value > 0.5f; // Random.value returns float between 0 and 1
+            //bool isSafe = UnityEngine.Random.value > 0.5f; // Random.value returns float between 0 and 1
+            //SetStateToResult(isSafe);
             SetState(State.ResultNotSafe);
+        }
+
+        private IEnumerator MessageTimeOut()
+        {
+            float timeout = 10f;
+            Debug.Log($"{timeout}s timeout set");
+            yield return new WaitForSeconds(timeout);
+
+            Debug.Log("Timeout reached. Setting state to Idle");
+            SetState(State.Idle);
         }
 
         public void SetStateToIdle()
@@ -97,12 +108,16 @@ namespace TOM.Apps.Template
                     loading.SetActive(false);
                     safe.SetActive(true);
                     not_safe.SetActive(false);
+
+                    StartCoroutine(MessageTimeOut());
                     break;
 
                 case State.ResultNotSafe:
                     loading.SetActive(false);
                     safe.SetActive(false);
                     not_safe.SetActive(true);
+
+                    StartCoroutine(MessageTimeOut());  
                     break;
             }
         }
