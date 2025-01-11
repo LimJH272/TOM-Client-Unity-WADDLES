@@ -104,6 +104,16 @@ namespace TOM.Apps.Template
             // templateUIController.SetImage(templateData.Image.ToByteArray());
             // templateUIController.PlayAudio(templateData.AudioPath);
 
+            string safeOrDanger = templateData.TextMessage.ToLower().Trim();
+            Debug.Log(safeOrDanger + "\n");
+            if (safeOrDanger == "danger")
+            {
+                templateUIController.SetStateToResult(false);
+            }
+            else if (safeOrDanger == "safe")
+            {
+                templateUIController.SetStateToResult(true);
+            }
         }
 
         private void sendTemplateRequestToServer()

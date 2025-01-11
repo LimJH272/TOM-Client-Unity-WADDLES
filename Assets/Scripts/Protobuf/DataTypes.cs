@@ -90,4 +90,6 @@ public static class DataTypes
     public const int PANDALENS_MOMENTS = 504;
     public const int PANDALENS_ERROR = 505;
     public const int PANDALENS_RESET = 506;
+
+    public const int PHOTO_TEMPLATE_IMAGE_FRAME_DATA = 1001;
 }

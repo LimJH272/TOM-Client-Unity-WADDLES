@@ -18,7 +18,7 @@ namespace TOM.Common.Config
     public class ConfigData
     {
         // set default values
-        public string host = "127.0.0.1";
+        public string host = "192.168.123.212";
         public string port = "8090";
     }
 

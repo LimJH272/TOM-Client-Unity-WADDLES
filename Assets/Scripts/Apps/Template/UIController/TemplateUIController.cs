@@ -35,7 +35,28 @@ namespace TOM.Apps.Template
         private State currentState;
 
         void Start() {
+            waddles.SetActive(true);
+            loading.SetActive(false);
+            safe.SetActive(false);
+            not_safe.SetActive(false);
+
             SetState(State.Idle);
+        }
+
+        public void OnButtonClicked() // Renamed from SetStateToLoading to be more descriptive
+        {
+            StartCoroutine(LoadingSequence());
+        }
+
+        private IEnumerator LoadingSequence()
+        {
+            SetState(State.Loading);
+
+            yield return new WaitForSeconds(3f); // Wait for 2 seconds
+
+            // Randomly select between safe and not safe
+            //bool isSafe = Random.value > 0.5f; // Random.value returns float between 0 and 1
+            SetState(State.ResultNotSafe);
         }
 
         public void SetStateToIdle()
@@ -57,26 +78,30 @@ namespace TOM.Apps.Template
         {
             currentState = newState;
 
-            waddles.SetActive(true);
-            loading.SetActive(false);
-            safe.SetActive(false);
-            not_safe.SetActive(false);
-
             // Activate GameObjects based on the current state
             switch (currentState)
             {
                 case State.Idle:
+                    loading.SetActive(false);
+                    safe.SetActive(false);
+                    not_safe.SetActive(false);
                     break;
 
                 case State.Loading:
                     loading.SetActive(true);
+                    safe.SetActive(false);
+                    not_safe.SetActive(false);
                     break;
 
                 case State.ResultSafe:
+                    loading.SetActive(false);
                     safe.SetActive(true);
+                    not_safe.SetActive(false);
                     break;
 
                 case State.ResultNotSafe:
+                    loading.SetActive(false);
+                    safe.SetActive(false);
                     not_safe.SetActive(true);
                     break;
             }
